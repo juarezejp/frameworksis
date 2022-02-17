@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Holaaa {{nombre}} !!!</h1>
+    <p> Tu edad es <b>{{edad}}</b></p>
+    {{materias}}
+    <ul>
+        {% for materia in materias %}
+            <li>{{materia}}</li>
+        {% endfor %}
+    </ul>
+    <h4>Calificaciones</h4>
+    {{calificaciones.frameworks}}
+    <ul>
+        {% for materia, calificacion in calificaciones.items %}
+            <li> {{materia}}:<b>{{calificacion}}</b> </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
