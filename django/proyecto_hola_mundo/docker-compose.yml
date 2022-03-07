@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: curso
+    #restart: always
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+    volumes: 
+      - ./hola_mundo/:/app
+
+  db:
+    image: mariadb
+    container_name: curso-db
+    #restart: always
+    environment:
+      MYSQL_DATABASE: holadb
+      MYSQL_USER: holadb_user
+      MYSQL_PASSWORD: holadb123
+      MYSQL_ROOT_PASSWORD: admin1234
+    volumes:
+      - db:/var/lib/mysql
+    ports:
+      - 3310:3306
+ 
+volumes:
+  db:    
+
