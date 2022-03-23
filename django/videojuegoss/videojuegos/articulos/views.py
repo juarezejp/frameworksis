@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from articulos.models import Articulos, Categoria
 from articulos.forms import FromArticulo, FromCategoria
 
@@ -11,6 +12,7 @@ def lista_articulos(request):
 
 def eliminar_articulos(request, id):
     Articulos.objects.get(id=id).delete()
+    messages.error(request, 'Se elimino un articulo.')
     return redirect('articulos_lista')
 
 def nuevo_articulo(request):
@@ -18,6 +20,7 @@ def nuevo_articulo(request):
         form = FromArticulo(request.POST)
         if form.is_valid():
             form.save()
+            messages.error(request, 'Se agrego un nuevo articulo.')
             return redirect('articulos_lista')
     else:#viene por get
         form = FromArticulo()
@@ -29,6 +32,7 @@ def editar_articulos(request, id):
         form = FromArticulo(request.POST, instance=articulo)
         if form.is_valid():
             form.save()
+            messages.error(request, 'Se modifico un articulo.')
             return redirect('articulos_lista')
     else:#viene por get
         form = FromArticulo(instance=articulo)
@@ -44,13 +48,21 @@ def nueva_categoria(request):
         form = FromCategoria(request.POST)
         if form.is_valid():
             form.save()
+            messages.error(request, 'Se agrego nueva categoria.')
             return redirect('categoria_lista')
     else:#viene por get
         form = FromCategoria()
         return render(request, 'categoriatemplates/nueva_categoria.html',  {'form':form})
 
 def eliminar_categoria(request, id):
-    Categoria.objects.get(id=id).delete()
+    #Categoria.objects.get(id=id).delete()
+    #messages.error(request, 'Se elimino una categoria.')
+    categoria_eliminar = Categoria.objects.get(id=id)
+    if  Articulos.objects.filter(categoria=categoria_eliminar):
+            messages.error(request, 'No se puede elimiar la categoria, tiene articulos asociados.')
+    else:
+        categoria_eliminar.delete()
+        messages.error(request, 'Se elimino con exito la categoria.')
     return redirect('categoria_lista')
 
 def editar_categoria(request, id):
@@ -59,6 +71,7 @@ def editar_categoria(request, id):
         form = FromCategoria(request.POST, instance=categoria)
         if form.is_valid():
             form.save()
+            messages.error(request, 'Se modifico una categoria.')
             return redirect('categoria_lista')
     else:#viene por get
         form = FromCategoria(instance=categoria)
